@@ -16,7 +16,7 @@ normal_ips = [f"10.0.0.{i}" for i in range(1, 20)]
 
 # ⚙️ CONTROL
 RESET_LOGS = True
-TOTAL_LOGS = 3000
+TOTAL_LOGS = 1500
 DELAY = 0.02
 
 # 🧹 Reset logs
