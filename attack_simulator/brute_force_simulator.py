@@ -7,49 +7,72 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 log_path = BASE_DIR / "dataset" / "simulated_attack.log"
 alert_path = BASE_DIR / "alerting" / "alerts.log"
 
-users = ["admin"]
-ips = [f"192.168.1.{i}" for i in range(10,60)]
+# 👤 Users
+users = ["admin", "root", "user1", "guest", "test"]
 
-# 🔥 CONTROL SETTINGS
-RESET_LOGS = True        # delete old logs before starting
-RUN_FOREVER = False
-TOTAL_LOGS = 250
-DELAY = 0.05
+# 🌍 IP pools
+attacker_ips = [f"192.168.1.{i}" for i in range(10, 60)]
+normal_ips = [f"10.0.0.{i}" for i in range(1, 20)]
 
-# 🧹 RESET FILES
+# ⚙️ CONTROL
+RESET_LOGS = True
+TOTAL_LOGS = 3000
+DELAY = 0.02
+
+# 🧹 Reset logs
 if RESET_LOGS:
-    log_path.parent.mkdir(exist_ok=True)
-    alert_path.parent.mkdir(exist_ok=True)
+    open(log_path, "w").close()
+    open(alert_path, "w").close()
+    print("Logs reset.")
 
-    open(log_path, "w").close()      # clear simulated logs
-    open(alert_path, "w").close()    # clear alerts
-
-    print("Old logs cleared.")
-
-print("Starting distributed attack simulation...")
+print("Starting realistic attack simulation...")
 
 with open(log_path, "a") as f:
 
-    if RUN_FOREVER:
-        while True:
-            ip = random.choice(ips)
-            user = random.choice(users)
+    for i in range(TOTAL_LOGS):
+
+        # 🎯 Choose scenario
+        scenario = random.choice([
+            "distributed_attack",
+            "normal_activity",
+            "mixed_noise"
+        ])
+
+        # -------------------------------
+        # 🔴 DISTRIBUTED ATTACK
+        # -------------------------------
+        if scenario == "distributed_attack":
+            user = "admin"
+            ip = random.choice(attacker_ips)
 
             log = f"Jan 10 10:01:11 server sshd[123]: Failed password for {user} from {ip} port 22 ssh2\n"
-            f.write(log)
-            f.flush()
 
-            time.sleep(DELAY)
-
-    else:
-        for _ in range(TOTAL_LOGS):
-            ip = random.choice(ips)
+        # -------------------------------
+        # 🟢 NORMAL USER ACTIVITY
+        # -------------------------------
+        elif scenario == "normal_activity":
             user = random.choice(users)
+            ip = random.choice(normal_ips)
+
+            success = random.choice([True, False, False])
+
+            if success:
+                log = f"Jan 10 10:01:11 server sshd[123]: Accepted password for {user} from {ip} port 22 ssh2\n"
+            else:
+                log = f"Jan 10 10:01:11 server sshd[123]: Failed password for {user} from {ip} port 22 ssh2\n"
+
+        # -------------------------------
+        # 🟡 NOISE TRAFFIC
+        # -------------------------------
+        else:
+            user = random.choice(users)
+            ip = random.choice(attacker_ips + normal_ips)
 
             log = f"Jan 10 10:01:11 server sshd[123]: Failed password for {user} from {ip} port 22 ssh2\n"
-            f.write(log)
-            f.flush()
 
-            time.sleep(DELAY)
+        f.write(log)
+        f.flush()
+
+        time.sleep(DELAY)
 
 print("Simulation complete.")
