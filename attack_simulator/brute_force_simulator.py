@@ -3,17 +3,28 @@ import random
 import time
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 log_path = BASE_DIR / "dataset" / "simulated_attack.log"
+alert_path = BASE_DIR / "alerting" / "alerts.log"
 
 users = ["admin"]
 ips = [f"192.168.1.{i}" for i in range(10,60)]
 
-log_path.parent.mkdir(exist_ok=True)
-
 # 🔥 CONTROL SETTINGS
-RUN_FOREVER = False        # True = infinite attack
-TOTAL_LOGS = 250          # used if RUN_FOREVER = False
-DELAY = 0.05               # speed of attack (seconds)
+RESET_LOGS = True        # delete old logs before starting
+RUN_FOREVER = False
+TOTAL_LOGS = 250
+DELAY = 0.05
+
+# 🧹 RESET FILES
+if RESET_LOGS:
+    log_path.parent.mkdir(exist_ok=True)
+    alert_path.parent.mkdir(exist_ok=True)
+
+    open(log_path, "w").close()      # clear simulated logs
+    open(alert_path, "w").close()    # clear alerts
+
+    print("Old logs cleared.")
 
 print("Starting distributed attack simulation...")
 

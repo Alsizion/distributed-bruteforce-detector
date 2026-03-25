@@ -1,6 +1,7 @@
 from pathlib import Path
 from elasticsearch import Elasticsearch
 import time
+from datetime import datetime, timezone
 
 ELASTIC_PASSWORD = "v7M1+6X_HE4Tvib0hSMH"
 
@@ -15,7 +16,7 @@ log_file = BASE_DIR / "dataset" / "simulated_attack.log"
 print("Sending logs to Elasticsearch...")
 
 with open(log_file, "r") as f:
-    f.seek(0, 2)
+    f.seek(0)
 
     while True:
         line = f.readline()
@@ -28,7 +29,7 @@ with open(log_file, "r") as f:
             parts = line.split()
 
             log_data = {
-                "timestamp": time.time(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "user": parts[8],
                 "source_ip": parts[10],
                 "event": "failed_login"

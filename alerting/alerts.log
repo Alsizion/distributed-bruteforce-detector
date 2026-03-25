@@ -1,0 +1,4 @@
+2026-03-25 13:05:10.366019 | ALERT | Distributed Brute Force | User: admin | Unique IPs: 30 | Attempts: 51
+2026-03-25 13:05:12.883278 | ALERT | Distributed Brute Force | User: admin | Unique IPs: 30 | Attempts: 51
+2026-03-25 13:05:15.497541 | ALERT | Distributed Brute Force | User: admin | Unique IPs: 35 | Attempts: 51
+2026-03-25 13:05:18.111064 | ALERT | Distributed Brute Force | User: admin | Unique IPs: 31 | Attempts: 51
