@@ -12,7 +12,7 @@ log_path.parent.mkdir(exist_ok=True)
 
 # 🔥 CONTROL SETTINGS
 RUN_FOREVER = False        # True = infinite attack
-TOTAL_LOGS = 2000          # used if RUN_FOREVER = False
+TOTAL_LOGS = 250          # used if RUN_FOREVER = False
 DELAY = 0.05               # speed of attack (seconds)
 
 print("Starting distributed attack simulation...")
